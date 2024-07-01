@@ -22,17 +22,17 @@ const Auction = () => {
     const web3 = useWeb3(); // Get the web3 instance from the hook
     // setWeb3(web3provider);
     const [tokens, setTokens] = useState([
-        { id: '1', name: 'PixelPal Hero', price: '1.0023 ETH', minted: false },
-        { id: '2', name: 'Blocky Explorer', price: '1.20 ETH', minted: false },
-        { id: '3', name: 'Retro Runner', price: '2 ETH', minted: false },
-        { id: '4', name: 'PixelQuest Knight', price: '1.722 ETH', minted: false },
-        { id: '5', name: 'PixelPal Thom', price: '2.111 ETH', minted: false },
-        { id: '6', name: 'Blocky Explorer', price: '1.998819 ETH', minted: false },
-        { id: '7', name: 'Retro Runner', price: '2.9271910 ETH', minted: false },
-        { id: '8', name: 'PixelQuest Knight', price: '1.80 ETH', minted: false },
+        { id: '1', name: 'PixelPal Hero', price: '0.000023 ETH', minted: false },
+        { id: '2', name: 'Blocky Explorer', price: '0.000020 ETH', minted: false },
+        { id: '3', name: 'Retro Runner', price: '0.0000012 ETH', minted: false },
+        { id: '4', name: 'PixelQuest Knight', price: '0.1000022 ETH', minted: false },
+        { id: '5', name: 'PixelPal Thom', price: '0.0000111 ETH', minted: false },
+        { id: '6', name: 'Blocky Explorer', price: '0.998819 ETH', minted: false },
+        { id: '7', name: 'Retro Runner', price: '1.000000000 ETH', minted: false },
+        { id: '8', name: 'PixelQuest Knight', price: '0.00000080 ETH', minted: false },
     ]); // State to manage tokens and their minting status
     // Replace with your contract's ABI and deployed address
-    const contractABI = [
+    const contractABI =[
       {
         "inputs": [],
         "stateMutability": "nonpayable",
@@ -151,7 +151,7 @@ const Auction = () => {
         "type": "receive"
       }
     ];
-      const contractAddress = '0x12f44113c307dB56033c4ADe105F061210c2D985'; // Replace with your deployed contract address
+      const contractAddress = '0xDA2a4ACDF8fb0086f26174D5C2d1B67797D3d163'; // Replace with your deployed contract address
 
     // Function to mint a token
     const mintToken = async (tokenId, price) => {
@@ -168,13 +168,15 @@ const Auction = () => {
             if (!price ) {
                 throw new Error('Invalid price');
             }
-            if ( isNaN(price)){
-                console.log('Invalid price', typeof price, price);
-                // convert price to int
-                price = parseInt(price);
-            }
+            // if ( isNaN(price)){
+            //     console.log('Invalid price', typeof price, price);
+            //     // convert price to int
+            //     price = parseInt(price);
+            // }
+            // take only int part 
+            price = price.split(' ')[0];
 
-            console.log(`Minting token with ID ${tokenId} from ${fromAddress} to ${fromAddress} with price ${price} ETH...`);
+            console.log(`Minting token with ID ${tokenId} from ${fromAddress} to ${contractAddress} with price ${price} ETH...`);
 
             // Convert price to Wei (1 Ether = 10^18 Wei)
             const priceWei = web3.utils.toWei(price.toString(), 'ether');
@@ -185,8 +187,9 @@ const Auction = () => {
             // Mint the token to the sender's address (Metamask connected address)
             await myERC721.methods.mint(tokenId).send({
                 from: fromAddress,
+                to: contractAddress,
                 value: priceWei, // Send the specified amount of Ether with the transaction
-                gasPrice: web3.utils.toWei('20', 'gwei') // Specify the gas price as needed
+                gasPrice: '200000000000' // Specify the gas price as needed
             });
 
             console.log(`Token with ID ${tokenId} minted successfully!`);

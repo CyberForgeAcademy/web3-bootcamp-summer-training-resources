@@ -23,7 +23,6 @@ contract MyERC721 {
         // Validate inputs and conditions
         require(to != address(0), "ERC721: mint to the zero address");
         require(_tokenOwner[tokenId] == address(0), "ERC721: token already minted");
-        require(price > 0, "ERC721: price must be greater than zero");
 
         // Mint the token
         _tokenOwner[tokenId] = to;
